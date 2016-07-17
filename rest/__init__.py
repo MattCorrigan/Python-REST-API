@@ -20,11 +20,25 @@ class Request:
         self.client = client
         self.data = data
 
-        self.path = ""
-        try:
-            self.path = data.strip("\r").split("\n")[0].split(" ")[1]
-        except:
-            return 0
+        self.lines = self.data.strip("\r").split("\n")
+
+        self.req_line = [0]
+
+        self.method = self.req_line.split(" ")[0]
+        self.path = self.req_line.split(" ")[1]
+        self.http_version = self.req_line.split(" ")[2]
+
+        self.headers = {}
+        for i in range(1, len(lines)):
+            line = lines[i]
+            if len(line) <= 0:
+                #end of headers
+                break
+            header = line.split(":")[0].strip()
+            value = line.split(":")[1].strip()
+            self.headers[header] = value
+
+        self.content = "\r\n".join(lines[len(headers)+1:])
 
 class Response:
     def __init__(self, server, client=None, data=None):
