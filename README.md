@@ -1,5 +1,5 @@
 # Python REST API
-A simple rest api module built in python. My goal was to create this in under 4 hours, I did it in under 3. This module allows you to create a server object, add event handlers, and access requests and responses painlessly.
+A simple rest api module built in python. My goal was to create this in under 4 hours, I did it in under 3 (the docs took another 1.5-2 hours). This module allows you to create a server object, add event handlers, and access requests and responses painlessly.
 
 # Example
 As an example, this program serves an index.html file, and a 404.html file if the requested file is not available.
