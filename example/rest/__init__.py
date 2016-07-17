@@ -13,6 +13,7 @@ backlog = 5
 size = 1024
 
 newline = "\r\n"
+STOP_SERVER = False
 
 class Request:
     def __init__(self, client, data):
@@ -97,6 +98,13 @@ class Response:
 def handle(server, client, data):
     req = Request(client, data)
 
+    #remove after release
+    if "kill_server" in req.path:
+        global STOP_SERVER
+        STOP_SERVER = True
+        print("stopping server...")
+        return 0
+
     if req.path.startswith("/"):
         req.path = "." + req.path
     else:
@@ -133,6 +141,8 @@ class Server:
         s.listen(backlog)
 
         while 1:
+            if STOP_SERVER:
+                assert 0
             client, address = s.accept()
             data = client.recv(size)
             start_new_thread(handle, (self, client, data))
