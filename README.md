@@ -133,3 +133,70 @@ A dictionary of the headers and their values that the request contained.
 
 ### `.content : string`
 Any content sent after the headers, known as the body of the request.
+
+
+## `Response` Object
+
+### `.__init__(server, client=None, data=None) : constructor`
+#### Arguments:
+- server: the Server object
+- client: optional, the client socket
+- data: optional, the raw http request
+
+#### What it does:
+This contructor initializes tons of variables and creates a response object to be used to send data back to the client.
+
+### `.server : object`
+This is the Server object that is currently running.
+
+### `.headers : dictionary`
+A dictionary of headers and values to be sent back to the client.
+
+### `.statusCode : integer`
+The status code, such as 200 or 404. This variable should not be set by your program, rather `setCode` should be called. This insures that the correct description is given to the status code.
+
+### `.status : string`
+This variable holds the description of the status code. This should not be set by your program, rather `setCode` will appropriately name this based on the code that you pass to `setCode`.
+
+### `.path : string`
+The path to the file that will be sent back to the client. This variable is used when `.form()` is called to load the file.
+
+### `.client : object`
+This is the client socket that the response should be sent back to.
+
+### `.data : string`
+This is the raw http request that was sent by the client.
+
+### `.header(name, value) : method`
+#### Arguments:
+- name: the name of the header, such as 'User-Agent' or 'Connection'
+- value: the value of the header, such as 'text/html' or 'close'
+
+#### What it does:
+This method adds a header to be sent back to the client in the response. 'Content-Type' and 'Content-Length' are not allowed, as they will be set automatically. Returns 1 if the header is accepted, or 0 if the header is one of the two that are not accepted.
+
+### `.setCode(statusCode) : method`
+#### Arguments:
+- statusCode: The status code that will be sent in the response, such as 200, 404, or 503
+
+#### What it does:
+This function sets `.statusCode` to the argument given, and sets `.status` to the corresponding description.
+
+### `.form_headers(content) : method`
+#### Arguments:
+- content: the body of the request, can be accessed from a Request object by using `request.content`
+
+#### What it does:
+This argument is used by `.form()` to add colons inbetween names and values, and to separate each header with a '\r\n'. This method returns a string with that information.
+
+### `.getContent() : method`
+#### No Arguments
+
+#### What it does:
+This method returns the contents of the file at the location of `.path`. If the file is not found, it will call the '404' event handler. If there is no such event handler, it will send a response with the contents '<h1>404 File Not Found</h1>'.
+
+### `.form() : method`
+#### No Arguments
+
+#### What it does:
+This method uses the object's methods and variables to create a fully-fledged http/1.1 response. It returns a string of the response, to be sent with `client.send(data)`.
