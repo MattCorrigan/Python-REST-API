@@ -20,6 +20,12 @@ class Request:
         self.client = client
         self.data = data
 
+        self.path = ""
+        try:
+            self.path = data.strip("\r").split("\n")[0].split(" ")[1]
+        except:
+            return 0
+
 class Response:
     def __init__(self, server, client=None, data=None):
         self.server = server
@@ -77,30 +83,26 @@ class Response:
 
 
 def handle(server, client, data):
-    path = ""
-    try:
-        path = data.strip("\r").split("\n")[0].split(" ")[1]
-    except:
-        return 0
+    req = Request(client, data)
 
     #remove after release
-    if "kill_server" in path:
+    if "kill_server" in req.path:
         global stop
         stop = True
         print("stopping server...")
         return 0
 
-    if path.startswith("/"):
-        path = "." + path
+    if req.path.startswith("/"):
+        req.path = "." + req.path
     else:
-        path = "./" + path
+        req.path = "./" + req.path
 
-    if path in server.events:
-        server.events[path](client, data)
+    if req.path in server.events:
+        server.events[req.path](client, data)
     else:
         # no handler
         r = Response(server, client, data)
-        r.path = path
+        r.path = req.path
         client.send(r.form())
 
     try:
