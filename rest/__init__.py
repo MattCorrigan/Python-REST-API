@@ -22,23 +22,23 @@ class Request:
 
         self.lines = self.data.strip("\r").split("\n")
 
-        self.req_line = [0]
+        self.req_line = self.lines[0]
 
         self.method = self.req_line.split(" ")[0]
         self.path = self.req_line.split(" ")[1]
         self.http_version = self.req_line.split(" ")[2]
 
         self.headers = {}
-        for i in range(1, len(lines)):
-            line = lines[i]
-            if len(line) <= 0:
+        for i in range(1, len(self.lines)):
+            line = self.lines[i]
+            if not ":" in line:
                 #end of headers
                 break
             header = line.split(":")[0].strip()
             value = line.split(":")[1].strip()
             self.headers[header] = value
 
-        self.content = "\r\n".join(lines[len(headers)+1:])
+        self.content = "\r\n".join(self.lines[len(self.headers)+1:])
 
 class Response:
     def __init__(self, server, client=None, data=None):
@@ -112,7 +112,7 @@ def handle(server, client, data):
         req.path = "./" + req.path
 
     if req.path in server.events:
-        server.events[req.path](client, data)
+        server.events[req.path](client, req)
     else:
         # no handler
         r = Response(server, client, data)
@@ -150,7 +150,7 @@ class Server:
 
 s = Server()
 
-def index(client, data):
+def index(client, request):
     global s
     r = Response(s)
     r.path = "./index.html"
