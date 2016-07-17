@@ -193,7 +193,7 @@ This argument is used by `.form()` to add colons inbetween names and values, and
 #### No Arguments
 
 #### What it does:
-This method returns the contents of the file at the location of `.path`. If the file is not found, it will call the '404' event handler. If there is no such event handler, it will send a response with the contents '<h1>404 File Not Found</h1>'.
+This method returns the contents of the file at the location of `.path`. If the file is not found, it will call the '404' event handler. If there is no such event handler, it will send a response with the contents '\<h1\>404 File Not Found\</h1\>'.
 
 ### `.form() : method`
 #### No Arguments
