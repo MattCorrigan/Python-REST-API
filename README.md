@@ -82,7 +82,7 @@ s.start()
 #### What it does:
 Initializes the object and a dictionary to hold events. Used by calling `s = Server()`.
 
-### `.on(event, function) : function`
+### `.on(event, function) : method`
 #### Arguments:
 - event: name of the file or event, such as '/index.html' or '404'
 - function: the function to be called when the event occurs
@@ -91,8 +91,45 @@ Initializes the object and a dictionary to hold events. Used by calling `s = Ser
 #### What it does:
 This method adds an event handler to the specified event. The second argument, the function, will be called when the first argument, the event name, occurs. This event might be a file name or '404'. When the event occurs, the function will be passed a client and a request object. The function should also use `client.send(data)` with a response object or a string to send a response back to the client.
 
-### `.start() : function`
+### `.start() : method`
 #### No Arguments
 
 #### What it does:
 It starts a server on port 8080 to listen for requests. It will call the event handlers when a client requests one of the specified events.
+
+## `Request` Object
+
+### `.__init__(client, data) : constructor`
+#### Arguments:
+- client: the client socket that has connected
+- data: the http request that was sent by the client
+
+#### What it does:
+Creates a request object. This object is usually created by Server object and then sent to the corresponding event handler.
+
+### `.client : object`
+The client socket.
+
+### `.data : string`
+The http request sent to the server.
+
+### `.lines : array`
+A list of the lines that make up the request.
+
+### `.req_line : string`
+The first line, or the request line. This line usually contains the http method, the path, and the http version.
+
+### `.method : string`
+The http method used in the request.
+
+### `.path : string`
+The path to the requested file.
+
+### `.http_version : string`
+The version of http that the client is using.
+
+### `.headers : dictionary`
+A dictionary of the headers and their values that the request contained.
+
+### `.content : string`
+Any content sent after the headers, known as the body of the request.
